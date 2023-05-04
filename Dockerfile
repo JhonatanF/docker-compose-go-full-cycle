@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine as base
+FROM golang:1.19.8-alpine as base
 
 FROM base as dev
     
