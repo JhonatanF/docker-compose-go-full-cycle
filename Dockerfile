@@ -1,12 +1,12 @@
-FROM golang:1.16-alpine as base
+FROM golang:1.20
 
-FROM base as dev
-    
-# RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+WORKDIR /usr/src/app
 
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+COPY go.mod ./
+RUN go mod download && go mod verify
 
-WORKDIR /opt/app/api   
+COPY . .
+RUN go build -v -o /usr/local/bin/app ./...
 
-# RUN go mod init main
-
-# CMD ["air"]
+CMD ["app"]
