@@ -1,12 +1,18 @@
-FROM golang:1.20
+FROM golang:1.18.8-alpine3.16 AS buildStage
 
 WORKDIR /usr/src/app
 
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY go.mod ./
-RUN go mod download && go mod verify
-
 COPY . .
-RUN go build -v -o /usr/local/bin/app ./...
 
-CMD ["app"]
+RUN go mod download
+
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -installsuffix cgo -o app .
+
+
+FROM scratch
+
+COPY --from=buildStage /usr/src/app/app /
+
+USER 1000:1000
+
+ENTRYPOINT ["/app"]

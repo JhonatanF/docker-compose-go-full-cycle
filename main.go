@@ -1,13 +1,9 @@
 package main
 
 import (
-  "fmt"
-  "time"
+	"fmt"
 )
 
 func main() {
-  for {
-    fmt.Println("Full Cycle Rocks!!")
-    time.Sleep(time.Second * 10)
-  }
+	fmt.Println("Full Cycle Rocks!!")
 }
